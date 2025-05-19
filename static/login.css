@@ -1,0 +1,124 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    width: 100%;
+    font-family: 'Orbitron', sans-serif;
+    background: url('/static/img/bg.jpeg') no-repeat center top;
+    background-size: cover;
+    color: #fff;
+}
+
+/* Container for everything */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: white;
+    text-align: center;
+}
+
+/* Game Title */
+.title {
+    font-size: 52px;
+    font-family: 'Cinzel Decorative', cursive;
+    letter-spacing: 4px;
+    color: white;
+    margin-bottom: 5px;
+}
+
+/* Subtitle */
+.subtitle {
+    font-size: 18px;
+    font-family: 'Orbitron', sans-serif;
+    color: white;
+    margin-bottom: 80px;
+}
+
+
+/* Form container */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Input field grouping */
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Label styling */
+.input-group label {
+    background: white;
+    border-radius: 20px;
+    padding: 15px 0;
+    width: 300px;
+    font-size: 24px;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    border-top: 8px solid #FFD700;
+    font-family: 'Black Ops One', cursive;
+    transition: 0.3s ease;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Input box styling */
+.input-group input {
+    background: white;
+    border-radius: 20px;
+    padding: 15px 0;
+    width: 300px;
+    font-size: 24px;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    border-top: 8px solid #FFD700;
+    font-family: 'Black Ops One', cursive;
+    transition: 0.3s ease;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* ENTER Button styling */
+button {
+    background: white;
+    border-radius: 20px;
+    padding: 15px 0;
+    width: 300px;
+    font-size: 24px;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    border-top: 8px solid #FFD700;
+    font-family: 'Black Ops One', cursive;
+    transition: 0.3s ease;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    margin-left: 150px; /* added line */
+    
+}
+
+button:hover {
+    background: #f2f2f2;
+    transform: scale(1.05);
+}
+
+.cards {
+    position: absolute;
+    right: 30px;
+    bottom: 10%;
+    height: 50%;
+  }

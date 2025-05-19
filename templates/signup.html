@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bid and Bridge - Sign Up</title> 
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Orbitron:wght@500&family=Black+Ops+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/signup.css"> 
+</head>
+<body>
+    <div class="container">
+        <div class="logo">BID AND BRIDGE</div>
+        <div class="subheading">4 PLAYER CARD GAME</div>
+        <form action="/signup" method="POST">
+            <div class="form-group">
+                <label>USERNAME</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="form-group">
+                <label>PASSWORD</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label>EMAIL</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>PHONE NO</label>
+                <input type="text" name="phone" required>
+            </div>
+            <button type="submit" class="enter-btn">ENTER</button>
+        </form>
+        <img src="/static/img/cards.png" alt="Cards" class="cards"> 
+    </div>
+</body>
+</html>

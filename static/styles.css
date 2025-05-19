@@ -1,0 +1,83 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  width: 100%;
+  font-family: 'Orbitron', sans-serif;
+  background: url('/static/img/bg.jpeg') no-repeat center top;
+  background-size: cover;
+  color: #fff;
+}
+
+.container {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* vertically center everything */
+  text-align: center;
+  gap: 15px;
+}
+
+.logo {
+  font-size: 52px;
+  font-family: 'Cinzel Decorative', cursive;
+  letter-spacing: 4px;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.subheading {
+  font-size: 18px;
+  font-family: 'Orbitron', sans-serif;
+  color: white;
+  margin-bottom: 80px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.btn {
+  background: white;
+  border-radius: 20px;
+  padding: 15px 0;
+  width: 300px;
+  font-size: 24px;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+  border-top: 8px solid #FFD700;
+  font-family: 'Black Ops One', cursive;
+  transition: 0.3s ease;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn:hover {
+  background: #f2f2f2;
+  transform: scale(1.05);
+}
+
+.girl {
+  position: absolute;
+  left: 30px;
+  bottom: 0;
+  height: 75%;
+}
+
+.cards {
+  position: absolute;
+  right: 30px;
+  bottom: 10%;
+  height: 50%;
+}

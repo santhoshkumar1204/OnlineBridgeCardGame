@@ -1,0 +1,109 @@
+/* General styles */
+body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Orbitron', sans-serif;
+    background: url('/static/img/bg.jpeg') no-repeat center top;
+    background-size: cover;
+    color: #fff;
+}
+
+/* Container styling */
+.container {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* vertically center everything */
+    text-align: center;
+    gap: 15px;
+}
+
+/* Header styles */
+.logo {
+    font-size: 52px;
+    font-family: 'Cinzel Decorative', cursive;
+    letter-spacing: 4px;
+    color: white;
+    margin-bottom: 5px;
+  }
+  
+  .subheading {
+    font-size: 18px;
+    font-family: 'Orbitron', sans-serif;
+    color: white;
+    margin-bottom: 80px;
+  }
+  
+/* Create Match section styles */
+.card {
+    background: white;
+    border-radius: 20px;
+    width: 500px;
+    font-family: 'Times New roman', cursive;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    text-align: center;
+    margin-top: 50px;
+    transform: translateY(-100px);
+}
+
+.card-header {
+    background: #FFD700;
+    font-size: 32px;
+    padding: 20px;
+    font-weight: bold;
+    color: black; /* Updated to black */
+}
+
+.card-body {
+    padding: 30px;
+    font-size: 18px;
+    color: black; /* Updated to black */
+}
+
+.create-match-button {
+    background: #0047FF;
+    color:white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: none;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.create-match-button:hover {
+    background: #0035cc;
+}
+
+.create-match-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: black; /* Updated to black */
+}
+
+.create-match-section p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: black; /* Updated to black */
+}
+
+.girl {
+    position: absolute;
+    right: 30px;
+    bottom: 0;
+    height: 75%;
+}
+
+.cards {
+    position: absolute;
+    left: 30px;
+    bottom: 15%;
+    height: 50%;
+}
+  

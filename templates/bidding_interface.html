@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bid and Bridge</title>
+    <link rel="stylesheet" href='/static/bidding_interface.css'>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Orbitron:wght@500&family=Black+Ops+One&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head> 
+<body>
+    <div class="game-container">
+        <!-- Player 3 (North) -->
+        <div class="player-container north" id="player3">
+            <div class="player-label">Player 3</div>
+            <img src="/static/img/boy1.jpg" alt="Player 3" class="player-avatar">
+            <div class="player-status"></div>
+        </div>
+
+        <!-- Player 4 (East) -->
+        <div class="player-container east" id="player4">
+            <div class="player-label">Player 4</div>
+            <img src="/static/img/boy2.jpg" alt="Player 4" class="player-avatar">
+            <div class="player-status"></div>
+        </div>
+
+        <!-- Player 2 (West) -->
+        <div class="player-container west" id="player2">
+            <div class="player-label">Player 2</div>
+            <img src="/static/img/boy3.jpg" alt="Player 2" class="player-avatar">
+            <div class="player-status"></div>
+        </div>
+
+        <!-- Player 1 (South) -->
+        <div class="player-container south" id="player1">
+            <div class="player-label">Player 1</div>
+            <img src="/static/img/boy4.jpg" alt="Player 1" class="player-avatar">
+            <div class="player-status"></div>
+        </div>
+
+        <!-- Center Game Area -->
+        <div class="center-area">
+            <!-- Current Player Display -->
+            <div class="current-player">
+                <h2>Current Player: <span id="playerTurn">1</span></h2>
+                
+                  </div>
+                  
+              
+            <!-- Bidding Board -->
+            <div class="bidding-board">
+                <div class="selected-bid" id="selectedBid">
+                    Select a number and suit
+                </div>
+                
+                <div class="bidding-row">
+                    <button class="bid-btn" data-value="1">1</button>
+                    <button class="bid-btn" data-value="2">2</button>
+                    <button class="bid-btn" data-value="3">3</button>
+                    <button class="bid-btn" data-value="4">4</button>
+                </div>
+                <div class="bidding-row">
+                    <button class="bid-btn" data-value="5">5</button>
+                    <button class="bid-btn" data-value="6">6</button>
+                    <button class="bid-btn" data-value="7">7</button>
+                </div>
+                <div class="bidding-row">
+                    <button class="suit-btn" data-suit="clubs">♣</button>
+                    <button class="suit-btn" data-suit="diamonds">♦</button>
+                    <button class="suit-btn" data-suit="hearts">♥</button>
+                    <button class="suit-btn" data-suit="spades">♠</button>
+                    <button class="suit-btn" data-suit="nt">NT</button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-row">
+                <button class="action-btn" id="doubleBtn">DOUBLE</button>
+                <button class="action-btn" id="passBtn">PASS</button>
+            </div>
+
+            <!-- Bidding History -->
+            <div class="bidding-history">
+                <h3>Bidding History</h3>
+                <div id="biddingLog"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let currentPlayer = 1;
+            let selectedNumber = null;
+            let selectedSuit = null;
+
+            // Update active player highlight
+            function updateActivePlayer() {
+                $('.player-container').removeClass('active');
+                $(`#player${currentPlayer}`).addClass('active');
+            }
+
+            // Handle number button clicks
+            $('.bid-btn').click(function() {
+                selectedNumber = $(this).data('value');
+                updateSelectedBid();
+            });
+
+            // Handle suit button clicks
+            $('.suit-btn').click(function() {
+                if (!selectedNumber) {
+                    alert('Please select a number first');
+                    return;
+                }
+                selectedSuit = $(this).data('suit');
+                makeBid('normal');
+            });
+
+            // Handle pass button
+            $('#passBtn').click(function() {
+                makeBid('pass');
+            });
+
+            // Handle double button
+            $('#doubleBtn').click(function() {
+                makeBid('double');
+            });
+
+            function updateSelectedBid() {
+                let text = 'Select a ';
+                if (!selectedNumber) text += 'number';
+                else if (!selectedSuit) text += 'suit';
+                else text = selectedNumber + ' ' + selectedSuit;
+                $('#selectedBid').text(text);
+            }
+
+            function makeBid(type) {
+                $.ajax({
+                    url: '/api/make_bid',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        type: type,
+                        number: selectedNumber,
+                        suit: selectedSuit,
+                        player: currentPlayer
+                    }),
+                    success: function(response) {
+                        if (response.error) {
+                            alert(response.error);
+                            return;
+                        }
+
+                        if (response.status === 'complete') {
+                            alert('Bidding phase complete!');
+                            window.location.href = '/end_bidding';
+                            return;
+                        }
+
+                        currentPlayer = response.next_player;
+                        $('#playerTurn').text(currentPlayer);
+                        updateActivePlayer();
+                        updateBiddingHistory(response.history);
+                        
+                        // Reset selection for next bid
+                        selectedNumber = null;
+                        selectedSuit = null;
+                        updateSelectedBid();
+                    },
+                    error: function(xhr) {
+                        const response = JSON.parse(xhr.responseText);
+                        alert(response.error || 'Error making bid');
+                    }
+                });
+            }
+
+            function updateBiddingHistory(history) {
+                const $log = $('#biddingLog');
+                $log.empty();
+                history.slice().reverse().forEach(entry => {
+                    $log.append(`<div>Player ${entry.player}: ${entry.bid}</div>`);
+                });
+            }
+
+            // Initialize active player highlight
+            updateActivePlayer();
+        });
+    </script>
+</body>
+</html>

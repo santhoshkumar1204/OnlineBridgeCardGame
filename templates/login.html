@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Bid and Bridge</title>
+    <link rel="stylesheet" href="/static/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Orbitron:wght@500&family=Black+Ops+One&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <div class="title">BID AND BRIDGE</div>
+        <div class="subtitle">4 PLAYER CARD GAME</div>
+
+        <form class="form" method="POST" action="{{ url_for('login') }}">
+            <div class="input-group">
+                <label for="username">USERNAME</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">PASSWORD</label>
+                <input type="password" id="password" name="password" required>
+        <img src="/static/img/card1.png" class="cards" alt="Cards" />
+            </div>
+
+            {% if error %}
+                <p style="color: rgb(234, 226, 226);">{{ error }}</p>
+            {% endif %}
+
+            <button type="submit">ENTER</button>
+        </form>
+    </div>
+</body>
+</html>

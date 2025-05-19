@@ -1,0 +1,16 @@
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    animation: cycleBackgrounds 8s infinite;
+    background-size: cover;
+    background-position: center;
+}
+
+@keyframes cycleBackgrounds {
+    0%   { background-image: url("/static/images/player1.jpg"); } /* Screenshot 2 */
+    25%  { background-image: url("/static/images/player2.jpg"); } /* Screenshot 3 */
+    50%  { background-image: url("/static/images/player3.jpg"); } /* Screenshot 4 */
+    75%  { background-image: url("/static/images/player4.jpg"); } /* Screenshot 5 */
+    100% { background-image: url("/static/images/player1.jpg"); }
+}

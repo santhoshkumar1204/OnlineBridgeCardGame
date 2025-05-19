@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>End Game</title>
+</head>
+<body>
+    <h1>Game Over</h1>
+    <h2>Final Scores:</h2>
+    <ul>
+        {% for player, score in result.items() %}
+            <li>{{ player }}: {{ score }}</li>
+        {% endfor %}
+    </ul>
+
+    {% if result %}
+        <h3>Winner: {{ winner }}</h3>
+    {% endif %}
+    <a href="{{ url_for('home') }}">Back to Home</a>
+</body>
+</html>
