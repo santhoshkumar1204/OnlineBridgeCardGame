@@ -13,7 +13,7 @@ The project integrates front-end and back-end components, featuring user registr
 - *Frontend:* HTML, CSS, JavaScript
 - *Backend:* Python, Flask
 - *Data Storage:* CSV files
-- *Data Structures:* Heap, Red-Black Tree, Queue, Map
+- *Advanced Data Structures:* Heaps, Red-Black Tree, Queue.
 
 ## How to Run
 
