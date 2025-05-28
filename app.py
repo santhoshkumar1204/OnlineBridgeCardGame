@@ -235,11 +235,20 @@ def get_game_state():
                 for card in game.players[player]
             ]
 
+        # Format contract details
+        bid_number = game.highest_bid[0] if isinstance(game.highest_bid, tuple) else game.highest_bid
+        required_tricks = bid_number + 6
+
         return jsonify({
             'current_player': session.get('current_player'),
             'hands': formatted_hands,
             'trick_wins': game.trick_wins,
-            'current_trick': game.current_trick
+            'current_trick': game.current_trick,
+            'contract_details': {
+                'declarer': game.declarer,
+                'bid': game.highest_bid,
+                'required_tricks': required_tricks
+            }
         })
     except Exception as e:
         print("Error in get_game_state:", str(e))  # Debug print

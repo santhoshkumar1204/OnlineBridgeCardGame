@@ -26,6 +26,10 @@ let contractDetails = {
   requiredTricks: null
 };
 
+// Initialize global game state
+window.gameState = window.gameState || {};
+window.gameState.trickWins = window.gameState.trickWins || {};
+
 function getPlayerPosition(playerId) {
   return playerPositions[playerId] || 'south';  // Default to bottom position (Player 1)
 }
@@ -54,6 +58,9 @@ function initializeGame() {
       contractDetails.bid = bidNumber;
       contractDetails.requiredTricks = bidNumber + 6; // Contract level + 6 for required tricks
       
+      // Initialize trickWins
+      window.gameState.trickWins = window.gameState.trickWins || {};
+      
       console.log("Using template game state:", { currentTurn, hands, contractDetails });
       showCards(currentTurn);
       updateGameInfo();
@@ -77,8 +84,20 @@ function initializeGame() {
       
       currentTurn = data.current_player || '1';  // Default to player 1 if not specified
       hands = data.hands;
-      console.log("Using server game state:", { currentTurn, hands });
+      
+      // Initialize contract details from server
+      if (data.contract_details) {
+        contractDetails.declarer = data.contract_details.declarer;
+        contractDetails.bid = data.contract_details.bid;
+        contractDetails.requiredTricks = data.contract_details.required_tricks;
+      }
+      
+      // Initialize trickWins
+      window.gameState.trickWins = data.trick_wins || {};
+      
+      console.log("Using server game state:", { currentTurn, hands, contractDetails });
       showCards(currentTurn);
+      updateGameInfo();
     })
     .catch(err => console.error("Error initializing game:", err));
 }
@@ -174,10 +193,13 @@ function showCards(playerTurn) {
 function playCard(card, playerId) {
   console.log("Playing card:", card, "for player:", playerId);
   
+  // Ensure trickWins is initialized
+  window.gameState.trickWins = window.gameState.trickWins || {};
+  
   // Validate it's the player's turn
   if (String(playerId) !== currentTurn) {
-    console.error("Not your turn!");
-    alert("Not your turn!");
+    console.error("Not your turn! Current turn:", currentTurn, "Your ID:", playerId);
+    alert("Not your turn! It's currently Player " + currentTurn + "'s turn.");
     return;
   }
   
@@ -253,7 +275,35 @@ function playCard(card, playerId) {
         window.gameState.trickWins = window.gameState.trickWins || {};
         window.gameState.trickWins[data.trick_winner] = (window.gameState.trickWins[data.trick_winner] || 0) + 1;
         
-        updateGameInfo();
+        // Update team tricks
+        const team1Tricks = (window.gameState.trickWins[1] || 0) + (window.gameState.trickWins[3] || 0);
+        const team2Tricks = (window.gameState.trickWins[2] || 0) + (window.gameState.trickWins[4] || 0);
+        
+        // Update declarer's team tricks
+        const declarerNumber = parseInt(contractDetails.declarer);
+        const partnerNumber = declarerNumber <= 2 ? declarerNumber + 2 : declarerNumber - 2;
+        const declarerTeamTricks = (window.gameState.trickWins[declarerNumber] || 0) + 
+                                 (window.gameState.trickWins[partnerNumber] || 0);
+        
+        // Update the UI
+        document.querySelector('.game-info').innerHTML = `
+          <div>Declarer: Player ${contractDetails.declarer}</div>
+          <div>Contract: ${contractDetails.bid}</div>
+          <div>Required tricks: ${contractDetails.requiredTricks}</div>
+          <div>Tricks won by declarer's team: ${declarerTeamTricks}/${contractDetails.requiredTricks}</div>
+          <div id="team-tricks">
+            <div>Team 1 (Players 1-3): ${team1Tricks}</div>
+            <div>Team 2 (Players 2-4): ${team2Tricks}</div>
+          </div>
+          <div id="player-tricks">
+            <div>Player 1: ${window.gameState.trickWins[1] || 0}</div>
+            <div>Player 2: ${window.gameState.trickWins[2] || 0}</div>
+            <div>Player 3: ${window.gameState.trickWins[3] || 0}</div>
+            <div>Player 4: ${window.gameState.trickWins[4] || 0}</div>
+          </div>
+          <div>Total tricks played: ${totalTricks}/13</div>
+        `;
+        
         alert(`Trick won by Player ${data.trick_winner}`);
         
         setTimeout(() => {
@@ -294,40 +344,39 @@ function playCard(card, playerId) {
 }
 
 function updateGameInfo() {
-  const gameInfo = document.querySelector('.game-info');
-  if (!gameInfo) return;
-
-  // Update trick count for declarer's team
-  const trickCount = document.getElementById('trick-count');
-  if (trickCount) {
-    const declarerTricks = getTricksWonByDeclarer();
-    trickCount.textContent = `Tricks won by declarer's team: ${declarerTricks}/${contractDetails.requiredTricks}`;
-  }
-
-  // Update total tricks
-  const totalTricksElement = document.getElementById('total-tricks');
-  if (totalTricksElement) {
-    totalTricksElement.textContent = totalTricks;
-  }
-
-  // Update individual player tricks
-  for (let i = 1; i <= 4; i++) {
-    const playerTricks = document.getElementById(`p${i}-tricks`);
-    if (playerTricks) {
-      playerTricks.textContent = window.gameState.trickWins?.[i] || 0;
-    }
-  }
-
-  // Update team tricks
-  const team1Tricks = document.getElementById('team1-tricks');
-  const team2Tricks = document.getElementById('team2-tricks');
+  // Ensure trickWins is initialized
+  window.gameState.trickWins = window.gameState.trickWins || {};
   
-  if (team1Tricks && team2Tricks) {
-    const team1Total = (window.gameState.trickWins?.[1] || 0) + (window.gameState.trickWins?.[3] || 0);
-    const team2Total = (window.gameState.trickWins?.[2] || 0) + (window.gameState.trickWins?.[4] || 0);
-    
-    team1Tricks.textContent = team1Total;
-    team2Tricks.textContent = team2Total;
+  // Calculate team tricks
+  const team1Tricks = (window.gameState.trickWins[1] || 0) + (window.gameState.trickWins[3] || 0);
+  const team2Tricks = (window.gameState.trickWins[2] || 0) + (window.gameState.trickWins[4] || 0);
+  
+  // Calculate declarer's team tricks
+  const declarerNumber = parseInt(contractDetails.declarer);
+  const partnerNumber = declarerNumber <= 2 ? declarerNumber + 2 : declarerNumber - 2;
+  const declarerTeamTricks = (window.gameState.trickWins[declarerNumber] || 0) + 
+                           (window.gameState.trickWins[partnerNumber] || 0);
+  
+  // Update the UI
+  const gameInfo = document.querySelector('.game-info');
+  if (gameInfo) {
+    gameInfo.innerHTML = `
+      <div>Declarer: Player ${contractDetails.declarer || 'Not set'}</div>
+      <div>Contract: ${contractDetails.bid || 'Not set'}</div>
+      <div>Required tricks: ${contractDetails.requiredTricks || 'Not set'}</div>
+      <div>Tricks won by declarer's team: ${declarerTeamTricks}/${contractDetails.requiredTricks || 'Not set'}</div>
+      <div id="team-tricks">
+        <div>Team 1 (Players 1-3): ${team1Tricks}</div>
+        <div>Team 2 (Players 2-4): ${team2Tricks}</div>
+      </div>
+      <div id="player-tricks">
+        <div>Player 1: ${window.gameState.trickWins[1] || 0}</div>
+        <div>Player 2: ${window.gameState.trickWins[2] || 0}</div>
+        <div>Player 3: ${window.gameState.trickWins[3] || 0}</div>
+        <div>Player 4: ${window.gameState.trickWins[4] || 0}</div>
+      </div>
+      <div>Total tricks played: ${totalTricks}/13</div>
+    `;
   }
 }
 
